@@ -1,14 +1,19 @@
 import { Request, Response } from 'express';
 import Controller from "../decorators/controller.decorator";
 import { Get, Post } from "../decorators/methods.decorator";
+import { BaseController } from './base.controller';
 
 @Controller('/cats')
-export default class CatController {
+export default class CatController extends BaseController {
     
     private cats: Array<{ name: string }> = [
         { name: 'Tom' },
         { name: 'Kitty' },
     ];
+
+    constructor(source: any){
+        super(source);
+    }
 
     @Get('')
     public index(req: Request, res: Response): void {
