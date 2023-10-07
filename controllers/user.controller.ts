@@ -34,9 +34,9 @@ export default class UserController extends BaseController {
     @Post('')
     public async addUser(req: Request, res: Response): Promise<void> {
         const user = new User();
-        user.firstName = "Timber";
-        user.lastName = "Saw";
-        user.age = 25;
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        user.age = req.body.age;
         await user.save();
         res.json({ user: user});
     }
@@ -48,7 +48,11 @@ export default class UserController extends BaseController {
         const user = await User.findOneBy({
             id: userId
         });
+        console.log('test')
+        console.log(req.body as User)
+        
         if(user){
+            user.mail = req.body.Mail
             user.firstName = req.body.firstName
             user.age = req.body.age
             user.lastName = req.body.lastName

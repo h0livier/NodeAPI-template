@@ -40,6 +40,7 @@ class Application {
      * Loop through every method using a method decorator to be used as a route
      */
     private registerRouters() {
+
         this._instance.get('/', (req, res) => {
             res.json({ message: 'Hello World!' });
         });
@@ -54,7 +55,10 @@ class Application {
 
             const exRouter = express.Router();
 
-            routers.forEach(({ method, path, handlerName}) => {
+            routers.forEach(({ method, middlewares, path, handlerName}) => {
+                if(middlewares){
+                    exRouter[method](path, ...middlewares, controllerInstance[String(handlerName)].bind(controllerInstance));
+                }
                 exRouter[method](path, controllerInstance[String(handlerName)].bind(controllerInstance));
                 info.push({
                     route: `${method.toLocaleUpperCase()} ${basePath + path}`,
@@ -68,6 +72,7 @@ class Application {
         this._instance.get('/routes', (req, res) => {
             res.json(info);
         });
+
     }
 }
 

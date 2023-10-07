@@ -10,18 +10,20 @@ export enum Methods {
 
 export interface IRouter {
     method: Methods;
+    middlewares?: any[];
     path: string;
     handlerName: string | symbol;
 }
 
 const methodDecoratorFactory = (method: Methods) => {
-    return (path: string): MethodDecorator => {
+    return (path: string, middlewares?: any[]): MethodDecorator => {
         return (target, propertyKey) => {
             const controllerClass = target.constructor;
-            const routers: IRouter[] =   Reflect.hasMetadata(MetadataKeys.ROUTERS, controllerClass) ?
+            const routers: IRouter[] = Reflect.hasMetadata(MetadataKeys.ROUTERS, controllerClass) ?
             Reflect.getMetadata(MetadataKeys.ROUTERS, controllerClass) : [];
             routers.push({
                 method,
+                middlewares,
                 path,
                 handlerName: propertyKey,
             });
